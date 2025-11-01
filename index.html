@@ -49,69 +49,82 @@
     .note button:hover {
       background-color: #0056b3;
     }
+
+    #clock {
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 15px;
+    }
   </style>
 </head>
 <body>
+
+<div id="clock"></div>
+
 <div class="notebook">
   <h1>My Notebook</h1>
   <div class="note">
     <textarea id="noteInput" placeholder="Write your note here..."></textarea>
     <button onclick="saveNote()">Save Note</button>
   </div>
-  <div id="savedNotes">
-    <!-- Saved notes will appear here -->
-  </div>
+  <div id="savedNotes"></div>
 </div>
 
 <script>
-  function saveNote() {
-    const noteInput = document.getElementById('noteInput');
-    const noteText = noteInput.value;
-    if (noteText.trim() === '') {
-      alert('Please write something before saving.');
-      return;
-    }
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    notes.push(noteText);
-    localStorage.setItem('notes', JSON.stringify(notes));
-    noteInput.value = '';
-    displayNotes();
+function saveNote() {
+  const noteInput = document.getElementById('noteInput');
+  const noteText = noteInput.value;
+
+  if (noteText.trim() === '') {
+    alert('Please write something before saving.');
+    return;
   }
 
-  function displayNotes() {
-    const savedNotes = document.getElementById('savedNotes');
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    savedNotes.innerHTML = '';
-    notes.forEach((note, index) => {
-      const noteElement = document.createElement('div');
-      noteElement.className = 'note';
-      noteElement.innerHTML = `
-                    <textarea readonly>${note}</textarea>
-                    <button onclick="deleteNote(${index})">Delete Note</button>
-                `;
-      savedNotes.appendChild(noteElement);
-    });
-  }
+  const notes = JSON.parse(localStorage.getItem('notes')) || [];
+  notes.push(noteText);
+  localStorage.setItem('notes', JSON.stringify(notes));
 
-  function deleteNote(index) {
-    const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    notes.splice(index, 1);
-    localStorage.setItem('notes', JSON.stringify(notes));
-    displayNotes();
-  }
+  noteInput.value = '';
+  displayNotes();
+}
 
-  document.addEventListener('DOMContentLoaded', displayNotes);
+function displayNotes() {
+  const savedNotes = document.getElementById('savedNotes');
+  const notes = JSON.parse(localStorage.getItem('notes')) || [];
 
+  savedNotes.innerHTML = '';
 
-	
-   <footer>
-     
-     
-    <p>Creator Nazar Ivanyuk </p>
-	<p>Phone number: 098 2332 697</p>
+  notes.forEach((note, index) => {
+    const noteElement = document.createElement('div');
+    noteElement.className = 'note';
+    noteElement.innerHTML = `
+      <textarea readonly>${note}</textarea>
+      <button onclick="deleteNote(${index})">Delete Note</button>
+    `;
+    savedNotes.appendChild(noteElement);
+  });
+}
 
-	   </footer>
-	
+function deleteNote(index) {
+  const notes = JSON.parse(localStorage.getItem('notes')) || [];
+  notes.splice(index, 1);
+  localStorage.setItem('notes', JSON.stringify(notes));
+  displayNotes();
+}
+
+// Clock
+function updateTime() {
+  const now = new Date();
+  const time = now.toLocaleTimeString('uk-UA');
+  document.getElementById("clock").textContent = time;
+}
+
+setInterval(updateTime, 1000);
+updateTime();
+
+document.addEventListener('DOMContentLoaded', displayNotes);
 </script>
+
 </body>
 </html>
